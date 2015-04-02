@@ -18,6 +18,7 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure FormShow(Sender: TObject);
   private
     FRender: TRenderThread;
     FCalc: TCalcThread;
@@ -55,9 +56,8 @@ begin
   i := ChoosePixelFormat(Canvas.Handle, @pfd);
   if i = 0 then
     RaiseLastOSError;
-  SetPixelFormat(Canvas.Handle, i, @pfd);
-  FRender := TRenderThread.Create();
-  FRender.RectColor := 1;
+  if not SetPixelFormat(Canvas.Handle, i, @pfd) then
+    RaiseLastOSError;
   FCalc := TCalcThread.Create;
 end;
 
@@ -119,6 +119,12 @@ end;
 procedure TForm1.FormResize(Sender: TObject);
 begin
   FRender.Resized := true;
+end;
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+  FRender := TRenderThread.Create();
+  FRender.RectColor := 1;
 end;
 
 procedure TForm1.Load;

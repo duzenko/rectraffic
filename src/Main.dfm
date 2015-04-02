@@ -2,12 +2,12 @@ object Form1: TForm1
   Left = 0
   Top = 0
   Caption = 'Form1'
-  ClientHeight = 416
-  ClientWidth = 608
+  ClientHeight = 324
+  ClientWidth = 473
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -15
+  Font.Height = -12
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
@@ -20,8 +20,9 @@ object Form1: TForm1
   OnMouseMove = FormMouseMove
   OnPaint = FormPaint
   OnResize = FormResize
-  PixelsPerInch = 120
-  TextHeight = 18
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 14
   object Timer1: TTimer
     Interval = 1
     OnTimer = Timer1Timer

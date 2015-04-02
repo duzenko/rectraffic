@@ -18,6 +18,7 @@ type
     Resized: Boolean;
     ClearColor, RectColor: Single;
     Fps: Integer;
+    constructor Create;
     procedure Paint;
   end;
 
@@ -38,19 +39,19 @@ end;
 
 { TRenderThread }
 
+constructor TRenderThread.Create;
+begin
+  CreateRC;
+  inherited;
+end;
+
 procedure TRenderThread.CreateRC;
-var
-  DC: THandle;
 begin
   while Application.MainForm = nil do
     Sleep(1);
-  DC := Application.MainForm.Canvas.Handle;
-  RC := wglCreateContext(DC);
+  RC := wglCreateContext(Application.MainForm.Canvas.Handle);
   if RC = 0 then
     RaiseLastOSError;
-  wglMakeCurrent(DC, RC);
-  wglSwapIntervalEXT    := wglGetProcAddress('wglSwapIntervalEXT');
-  wglSwapIntervalEXT(1);
 end;
 
 procedure TRenderThread.DestroyRC;
@@ -61,8 +62,11 @@ end;
 procedure TRenderThread.Execute;
 begin
   NameThreadForDebugging('GL Renderer');
+  wglMakeCurrent(Application.MainForm.Canvas.Handle, RC);
+  wglSwapIntervalEXT    := wglGetProcAddress('wglSwapIntervalEXT');
+  if @wglSwapIntervalEXT <> nil then
+    wglSwapIntervalEXT(1);
   { Place thread code here }
-  CreateRC;
   glClearColor(0.0, 0.5, 0.0, 0);
   while not Application.Terminated do begin
     if Resized then
